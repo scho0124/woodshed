@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+
+  --color-bg: #14120f;
+  --color-surface: #1d1a15;
+  --color-surface-hover: #24201a;
+  --color-border: #2a241c;
+  --color-border-strong: #34302a;
+
+  --color-ink: #f3eee4;
+  --color-ink-muted: #b3a797;
+  --color-ink-faint: #7a705f;
+
+  --color-rhythm: #e3a458;
+  --color-rhythm-tint: #3a2a15;
+  --color-lead: #e2725b;
+  --color-lead-tint: #3a2019;
+  --color-bass: #4fa8a0;
+  --color-bass-tint: #163330;
+  --color-piano: #a88bc7;
+  --color-piano-tint: #2a2133;
+  --color-tab: #c9b48a;
+  --color-tab-tint: #302a1d;
+
+  --color-success: #7cb679;
+  --color-danger: #c9695b;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Layered so components that draw their own focus ring (focus-visible:outline-none) win. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-rhythm);
+    outline-offset: 2px;
+  }
+}
+
+::selection {
+  background: var(--color-rhythm);
+  color: var(--color-bg);
+}
