@@ -6,3 +6,4 @@ pub mod skills;
 pub mod tabs;
 pub mod audio;
 pub mod playalong;
+pub mod tutorials;

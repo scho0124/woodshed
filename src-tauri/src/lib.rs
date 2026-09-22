@@ -2,6 +2,7 @@ mod audio;
 mod commands;
 mod db;
 mod models;
+mod tutorials;
 
 use audio::capture::AudioState;
 use commands::audio::{
@@ -14,6 +15,7 @@ use commands::profiles::{create_profile, delete_profile, list_profiles};
 use commands::progress::{export_sessions_json, get_progress_stats};
 use commands::sessions::{complete_session, create_session, list_recent_sessions, log_session_event};
 use commands::skills::list_skills_by_path;
+use commands::tutorials::get_skill_tutorial;
 use commands::tabs::{create_tab, delete_tab, get_tab, list_tabs, open_tab_file, update_tab};
 use std::sync::Arc;
 use tauri::Manager;
@@ -55,6 +57,7 @@ pub fn run() {
             stop_audio_input,
             create_playalong_run,
             list_playalong_runs,
+            get_skill_tutorial,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

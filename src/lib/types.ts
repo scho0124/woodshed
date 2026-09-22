@@ -1,4 +1,4 @@
-export type GuitarPath = "rhythm" | "lead" | "bass" | "piano";
+export type GuitarPath = "rhythm" | "lead" | "bass" | "piano" | "vocals";
 
 export interface Profile {
   id: string;
@@ -82,6 +82,7 @@ export const PATH_LABELS: Record<GuitarPath, string> = {
   lead: "Lead Guitar",
   bass: "Bass Guitar",
   piano: "Piano",
+  vocals: "Extreme Vocals",
 };
 
 export const PATH_ACCENT: Record<GuitarPath, { text: string; bg: string; tint: string }> = {
@@ -89,7 +90,35 @@ export const PATH_ACCENT: Record<GuitarPath, { text: string; bg: string; tint: s
   lead: { text: "text-lead", bg: "bg-lead", tint: "bg-lead-tint" },
   bass: { text: "text-bass", bg: "bg-bass", tint: "bg-bass-tint" },
   piano: { text: "text-piano", bg: "bg-piano", tint: "bg-piano-tint" },
+  vocals: { text: "text-vocals", bg: "bg-vocals", tint: "bg-vocals-tint" },
 };
+
+/** A tutorial pick; see src-tauri/src/tutorials.rs for how it's ranked. */
+export interface TutorialVideo {
+  video_id: string;
+  title: string;
+  channel: string;
+  thumbnail_url: string;
+  duration_seconds: number;
+  views: number;
+  /** null when the uploader hides likes. */
+  likes: number | null;
+  comments_sampled: number;
+  positive_comments: number;
+  negative_comments: number;
+  score: number;
+}
+
+export interface SkillTutorial {
+  query: string;
+  /** A plain YouTube search for the same query, for when there's no pick. */
+  search_url: string;
+  /** Best first. */
+  videos: TutorialVideo[];
+  fetched_at: string | null;
+  /** True when YOUTUBE_API_KEY isn't set in src-tauri/.env. */
+  missing_api_key: boolean;
+}
 
 export interface TabSummary {
   id: string;

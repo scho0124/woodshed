@@ -9,6 +9,7 @@ import type {
   ProgressStats,
   Session,
   SessionSummary,
+  SkillTutorial,
   SkillWithProgress,
   GuitarPath,
   TabDetail,
@@ -25,6 +26,10 @@ export const api = {
 
   listSkillsByPath: (profileId: string, path: GuitarPath) =>
     invoke<SkillWithProgress[]>("list_skills_by_path", { profileId, path }),
+
+  /** `refresh` skips the cached pick and asks YouTube again. */
+  getSkillTutorial: (skillId: string, refresh = false) =>
+    invoke<SkillTutorial>("get_skill_tutorial", { skillId, refresh }),
 
   createSession: (input: {
     profile_id: string;
