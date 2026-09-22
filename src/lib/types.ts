@@ -1,4 +1,4 @@
-export type GuitarPath = "rhythm" | "lead" | "bass" | "piano" | "vocals";
+export type GuitarPath = "rhythm" | "lead" | "bass" | "piano" | "vocals" | "ukulele";
 
 export interface Profile {
   id: string;
@@ -83,6 +83,7 @@ export const PATH_LABELS: Record<GuitarPath, string> = {
   bass: "Bass Guitar",
   piano: "Piano",
   vocals: "Extreme Vocals",
+  ukulele: "Ukulele",
 };
 
 export const PATH_ACCENT: Record<GuitarPath, { text: string; bg: string; tint: string }> = {
@@ -91,6 +92,7 @@ export const PATH_ACCENT: Record<GuitarPath, { text: string; bg: string; tint: s
   bass: { text: "text-bass", bg: "bg-bass", tint: "bg-bass-tint" },
   piano: { text: "text-piano", bg: "bg-piano", tint: "bg-piano-tint" },
   vocals: { text: "text-vocals", bg: "bg-vocals", tint: "bg-vocals-tint" },
+  ukulele: { text: "text-ukulele", bg: "bg-ukulele", tint: "bg-ukulele-tint" },
 };
 
 /** A tutorial pick; see src-tauri/src/tutorials.rs for how it's ranked. */

@@ -5,7 +5,7 @@ export type Instrument = "guitar" | "bass";
 export interface Tuning {
   name: string;
   instrument: Instrument;
-  /** Open-string MIDI notes, lowest string first. */
+  /** Open-string MIDI notes, lowest string first (ukulele: G C E A, as strung). */
   strings: number[];
 }
 
@@ -26,6 +26,10 @@ export const TUNINGS: Tuning[] = [
   { name: "Open D", instrument: "guitar", strings: [38, 45, 50, 54, 57, 62] },
   { name: "Open E", instrument: "guitar", strings: [40, 47, 52, 56, 59, 64] },
   { name: "Standard (7-string)", instrument: "guitar", strings: [35, 40, 45, 50, 55, 59, 64] },
+  // Ukuleles sit inside the guitar pitch range, so they use its detector settings.
+  { name: "Standard (ukulele)", instrument: "guitar", strings: [67, 60, 64, 69] },
+  { name: "Low G (ukulele)", instrument: "guitar", strings: [55, 60, 64, 69] },
+  { name: "Baritone (ukulele)", instrument: "guitar", strings: [50, 55, 59, 64] },
   { name: "Standard (bass)", instrument: "bass", strings: [28, 33, 38, 43] },
   { name: "Drop D (bass)", instrument: "bass", strings: [26, 33, 38, 43] },
   { name: "Standard (5-string bass)", instrument: "bass", strings: [23, 28, 33, 38, 43] },
@@ -88,6 +92,7 @@ const TUNING_PHRASES: [RegExp, string][] = [
   [/\bopen\s*g\b/i, "Open G"],
   [/\bopen\s*d\b/i, "Open D"],
   [/\bopen\s*e\b/i, "Open E"],
+  [/\bgcea\b|\bukulele\b|\buke\b/i, "Standard (ukulele)"],
   [/\b(e\s*)?standard\b|\beadgbe\b/i, "Standard"],
 ];
 

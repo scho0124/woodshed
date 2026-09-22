@@ -2,11 +2,12 @@ import type { Generator } from "./types";
 import { pickFromPool } from "./pickFromPool";
 
 /**
- * Vowel, syllable or exercise cue for vocal drills. The detail line is the item's
- * own instruction from `config.cues` if it has one, otherwise a random pick from
- * `config.patterns` so the same vowel gets drilled a few different ways.
+ * A short cue (a vowel, strum pattern, note name...) with an instruction under it.
+ * The detail line is the item's own instruction from `config.cues` if it has one,
+ * otherwise a random pick from `config.patterns` so the same item gets drilled a
+ * few different ways.
  */
-export const vocalDrillPicker: Generator = (input, previousLabel) => {
+export const cuePicker: Generator = (input, previousLabel) => {
   const label = pickFromPool(input, previousLabel);
   if (!label) return { label: "?" };
 

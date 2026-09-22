@@ -5,7 +5,7 @@ import { grooveRootPicker } from "./grooveRootPicker";
 import { pianoChordPicker } from "./pianoChordPicker";
 import { pianoScalePicker } from "./pianoScalePicker";
 import { pianoNoteFinder } from "./pianoNoteFinder";
-import { vocalDrillPicker } from "./vocalDrillPicker";
+import { cuePicker } from "./cuePicker";
 
 /**
  * The extensibility point for the whole app: a skill row names one of these
@@ -20,7 +20,9 @@ export const GENERATORS: Record<string, Generator> = {
   piano_chord_picker: pianoChordPicker,
   piano_scale_picker: pianoScalePicker,
   piano_note_finder: pianoNoteFinder,
-  vocal_drill_picker: vocalDrillPicker,
+  cue_picker: cuePicker,
+  // Original name of cue_picker; the vocals skills in 0007 still use it.
+  vocal_drill_picker: cuePicker,
 };
 
 export type { Generator, Prompt, GeneratorInput } from "./types";

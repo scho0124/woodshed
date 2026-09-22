@@ -1,10 +1,10 @@
 # Woodshed
 
-A desktop practice tutor built with Tauri, React and TypeScript. It covers five practice paths (Rhythm Guitar, Lead Guitar, Bass Guitar, Piano and Extreme Vocals), a tab library with play-along, and a tuner. Press `?` on the Home screen to see every feature and keyboard shortcut.
+A desktop practice tutor built with Tauri, React and TypeScript. It covers six practice paths (Rhythm Guitar, Lead Guitar, Bass Guitar, Piano, Extreme Vocals and Ukulele), a tab library with play-along, and a tuner. Press `?` on the Home screen to see every feature and keyboard shortcut.
 
 ## Video tutorials
 
-Extreme Vocals skills have a **Tutorial** section on their setup screen. It picks a helpful YouTube video for the skill and shows two alternatives.
+Extreme Vocals and Ukulele skills have a **Tutorial** section on their setup screen. It picks a helpful YouTube video for the skill and shows two alternatives.
 
 ### How a video is picked
 
@@ -33,7 +33,7 @@ Video picking needs a YouTube Data API key:
 
 Without a key, the Tutorial section shows a **Search YouTube** button instead.
 
-Each new pick uses about 106 of the 10,000 free daily quota units, so picking videos for all 11 vocals skills costs about 1,200.
+Each new pick uses about 106 of the 10,000 free daily quota units, so picking videos for all 17 vocals and ukulele skills costs about 1,800.
 
 ### Adding a tutorial to another skill
 

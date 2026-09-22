@@ -10,7 +10,7 @@ import { PATH_LABELS } from "@/lib/types";
 import { useHotkeys } from "@/hooks/useHotkeys";
 import { HelpDialog } from "@/components/HelpDialog";
 
-const PATHS: GuitarPath[] = ["rhythm", "lead", "bass", "piano", "vocals"];
+const PATHS: GuitarPath[] = ["rhythm", "lead", "bass", "piano", "vocals", "ukulele"];
 
 const PATH_STYLE: Record<GuitarPath, { text: string; iconBg: string; blurb: string }> = {
   rhythm: {
@@ -37,6 +37,11 @@ const PATH_STYLE: Record<GuitarPath, { text: string; iconBg: string; blurb: stri
     text: "text-vocals",
     iconBg: "bg-vocals-tint",
     blurb: "Fry, false cord, lows and highs for metal, death, black and thrash. Built on breath support, never on pain.",
+  },
+  ukulele: {
+    text: "text-ukulele",
+    iconBg: "bg-ukulele-tint",
+    blurb: "Chords, strumming and fingerpicking in GCEA tuning, from your first C chord to island strums.",
   },
 };
 

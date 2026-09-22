@@ -1,3 +1,5 @@
+import type { ChordInstrument } from "@/lib/chordShapes";
+
 export interface Prompt {
   /** Big label shown center-stage (a chord name, a fret number, a root note). */
   label: string;
@@ -5,6 +7,8 @@ export interface Prompt {
   detail?: string;
   /** If set and a shape exists in chordShapes.ts, the fretboard diagram renders. */
   chordShapeName?: string;
+  /** Which shape table `chordShapeName` is looked up in; guitar if unset. */
+  chordInstrument?: ChordInstrument;
   /** If set, a two-octave keyboard renders with these keys pressed (0 = the first C). */
   keys?: number[];
   /** Keys in `keys` to mark as the root. */

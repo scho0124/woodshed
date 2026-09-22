@@ -1,9 +1,15 @@
-import { CHORD_SHAPES } from "@/lib/chordShapes";
+import { chordShape, type ChordInstrument } from "@/lib/chordShapes";
 
-const STRING_X = [10, 38, 66, 94, 122, 150];
-
-export function ChordDiagram({ name, size = "lg" }: { name: string; size?: "lg" | "sm" }) {
-  const shape = CHORD_SHAPES[name];
+export function ChordDiagram({
+  name,
+  instrument = "guitar",
+  size = "lg",
+}: {
+  name: string;
+  instrument?: ChordInstrument;
+  size?: "lg" | "sm";
+}) {
+  const shape = chordShape(name, instrument);
   const scale = size === "lg" ? 1 : 0.62;
   const w = 170 * scale;
   const h = 212 * scale;
@@ -21,6 +27,8 @@ export function ChordDiagram({ name, size = "lg" }: { name: string; size?: "lg" 
 
   const { frets, baseFret } = shape;
   const fretCount = 4;
+  // Strings spread evenly between x=10 and x=150, however many there are.
+  const stringX = frets.map((_, i) => 10 + (i * 140) / (frets.length - 1));
 
   return (
     <div style={{ width: w, height: h, position: "relative" }}>
@@ -35,12 +43,11 @@ export function ChordDiagram({ name, size = "lg" }: { name: string; size?: "lg" 
         {Array.from({ length: fretCount }).map((_, i) => (
           <rect key={i} x={5} y={20 + (i + 1) * 45} width={160} height={2} fill="#453D32" />
         ))}
-        {STRING_X.map((x, i) => (
+        {stringX.map((x, i) => (
           <rect key={i} x={x} y={20} width={2} height={180} fill="#453D32" />
         ))}
         {frets.map((fret, i) => {
-          const stringIndex = i;
-          const x = STRING_X[stringIndex];
+          const x = stringX[i];
           if (fret === -1) {
             return (
               <text

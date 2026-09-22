@@ -82,12 +82,12 @@ const FEATURES: { name: string; detail: string }[] = [
   {
     name: "Practice paths",
     detail:
-      "Rhythm, Lead, Bass, Piano and Extreme Vocals, each a list of skills with generated drills: chords, scale patterns, grooves, triads, note finding and scream techniques. Reps add up toward mastery.",
+      "Rhythm, Lead, Bass, Piano, Extreme Vocals and Ukulele, each a list of skills with generated drills: chords, scale patterns, grooves, triads, strumming, note finding and scream techniques. Reps add up toward mastery.",
   },
   {
     name: "Tutorials",
     detail:
-      "Extreme Vocals skills pick a tutorial video for you, ranked by views, like rate and a sample of viewer comments. Videos with lots of \"this hurt my throat\" comments get ranked down.",
+      "Extreme Vocals and Ukulele skills pick a tutorial video for you, ranked by views, like rate and a sample of viewer comments. Videos with lots of \"this hurt my throat\" comments get ranked down.",
   },
   {
     name: "Session setup",
@@ -110,7 +110,7 @@ const FEATURES: { name: string; detail: string }[] = [
   {
     name: "Tuner",
     detail:
-      "Listens to your input and finds the string for you, or lock to one. Supports alternate tunings and a chromatic mode.",
+      "Listens to your input and finds the string for you, or lock to one. Supports alternate guitar tunings, ukulele tunings and a chromatic mode.",
   },
   {
     name: "Play-along",

@@ -52,6 +52,16 @@ export function PathIcon({ path, className }: { path: GuitarPath | "tabs"; class
     );
   }
 
+  if (path === "ukulele") {
+    return (
+      <svg {...common}>
+        <circle cx="8.5" cy="15.5" r="5" />
+        <circle cx="8.5" cy="15.5" r="1.5" fill="currentColor" stroke="none" />
+        <path d="M12 12l7-7M17.5 3.5l3 3" />
+      </svg>
+    );
+  }
+
   if (path === "tabs") {
     return (
       <svg {...common}>
