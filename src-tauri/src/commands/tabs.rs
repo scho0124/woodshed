@@ -4,7 +4,7 @@ use tauri::{AppHandle, Manager, State};
 use tauri_plugin_opener::OpenerExt;
 use uuid::Uuid;
 
-const SUMMARY_COLUMNS: &str = "id, title, artist, tuning, file_name, mime_type, created_at";
+const SUMMARY_COLUMNS: &str = "id, title, artist, tuning, capo, file_name, mime_type, created_at";
 
 #[tauri::command]
 pub async fn list_tabs(
@@ -47,14 +47,15 @@ pub async fn get_tab(pool: State<'_, PgPool>, id: Uuid) -> Result<TabDetail, Str
 #[tauri::command]
 pub async fn create_tab(pool: State<'_, PgPool>, input: NewTabInput) -> Result<TabSummary, String> {
     sqlx::query_as::<_, TabSummary>(&format!(
-        "INSERT INTO tabs (profile_id, title, artist, tuning, file_name, mime_type, data)
-         VALUES ($1, $2, $3, $4, $5, $6, $7)
+        "INSERT INTO tabs (profile_id, title, artist, tuning, capo, file_name, mime_type, data)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
          RETURNING {SUMMARY_COLUMNS}"
     ))
     .bind(input.profile_id)
     .bind(input.title.trim())
     .bind(input.artist.trim())
     .bind(input.tuning.trim())
+    .bind(input.capo.clamp(0, 12))
     .bind(input.file_name)
     .bind(input.mime_type)
     .bind(input.data)
@@ -66,7 +67,7 @@ pub async fn create_tab(pool: State<'_, PgPool>, input: NewTabInput) -> Result<T
 #[tauri::command]
 pub async fn update_tab(pool: State<'_, PgPool>, input: UpdateTabInput) -> Result<TabSummary, String> {
     sqlx::query_as::<_, TabSummary>(&format!(
-        "UPDATE tabs SET title = $2, artist = $3, tuning = $4, updated_at = now()
+        "UPDATE tabs SET title = $2, artist = $3, tuning = $4, capo = $5, updated_at = now()
          WHERE id = $1
          RETURNING {SUMMARY_COLUMNS}"
     ))
@@ -74,6 +75,7 @@ pub async fn update_tab(pool: State<'_, PgPool>, input: UpdateTabInput) -> Resul
     .bind(input.title.trim())
     .bind(input.artist.trim())
     .bind(input.tuning.trim())
+    .bind(input.capo.clamp(0, 12))
     .fetch_one(pool.inner())
     .await
     .map_err(|e| e.to_string())

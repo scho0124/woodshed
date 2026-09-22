@@ -6,7 +6,7 @@ use uuid::Uuid;
 #[tauri::command]
 pub async fn list_profiles(pool: State<'_, PgPool>) -> Result<Vec<Profile>, String> {
     sqlx::query_as::<_, Profile>(
-        "SELECT id, name, color, created_at FROM profiles ORDER BY created_at ASC",
+        "SELECT id, name, color, created_at, audio_consent_at FROM profiles ORDER BY created_at ASC",
     )
     .fetch_all(pool.inner())
     .await
@@ -21,7 +21,7 @@ pub async fn create_profile(
 ) -> Result<Profile, String> {
     sqlx::query_as::<_, Profile>(
         "INSERT INTO profiles (id, name, color) VALUES (gen_random_uuid(), $1, $2)
-         RETURNING id, name, color, created_at",
+         RETURNING id, name, color, created_at, audio_consent_at",
     )
     .bind(name)
     .bind(color)

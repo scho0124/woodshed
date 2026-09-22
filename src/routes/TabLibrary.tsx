@@ -86,6 +86,7 @@ export function TabLibrary() {
           title: d.title,
           artist: d.artist,
           tuning: d.tuning,
+          capo: d.capo,
           file_name: d.file.name,
           mime_type: d.isText ? "text/plain" : d.file.type || "application/octet-stream",
           data,
@@ -214,6 +215,16 @@ export function TabLibrary() {
                   aria-label="Tuning"
                   list="tuning-suggestions"
                   onChange={(e) => updateDraft(i, { tuning: e.target.value })}
+                />
+                <Input
+                  className="w-20"
+                  type="number"
+                  min={0}
+                  max={12}
+                  value={d.capo}
+                  aria-label="Capo"
+                  title="Capo fret (0 for none)"
+                  onChange={(e) => updateDraft(i, { capo: Math.min(12, Math.max(0, Number(e.target.value) || 0)) })}
                 />
                 <button
                   aria-label={`Remove ${d.file.name}`}

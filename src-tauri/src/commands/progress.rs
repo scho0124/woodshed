@@ -21,8 +21,11 @@ pub async fn get_progress_stats(
     .map_err(|e| e.to_string())?;
 
     let total_practice_seconds: i64 = sqlx::query_scalar(
-        "SELECT COALESCE(SUM(EXTRACT(EPOCH FROM (ended_at - started_at)))::BIGINT, 0)
-         FROM sessions WHERE profile_id = $1 AND ended_at IS NOT NULL",
+        "SELECT COALESCE(SUM(EXTRACT(EPOCH FROM (ended_at - started_at)))::BIGINT, 0) FROM (
+            SELECT started_at, ended_at FROM sessions WHERE profile_id = $1 AND ended_at IS NOT NULL
+            UNION ALL
+            SELECT started_at, ended_at FROM playalong_runs WHERE profile_id = $1
+         ) practice",
     )
     .bind(profile_id)
     .fetch_one(pool)
@@ -44,8 +47,11 @@ pub async fn get_progress_stats(
     .map_err(|e| e.to_string())?;
 
     let dates: Vec<NaiveDate> = sqlx::query_scalar(
-        "SELECT DISTINCT date(started_at) FROM sessions
-         WHERE profile_id = $1 AND ended_at IS NOT NULL ORDER BY 1 DESC",
+        "SELECT DISTINCT date(started_at) FROM (
+            SELECT started_at FROM sessions WHERE profile_id = $1 AND ended_at IS NOT NULL
+            UNION ALL
+            SELECT started_at FROM playalong_runs WHERE profile_id = $1
+         ) practice ORDER BY 1 DESC",
     )
     .bind(profile_id)
     .fetch_all(pool)

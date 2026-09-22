@@ -5,6 +5,8 @@ export interface Profile {
   name: string;
   color: string;
   created_at: string;
+  /** When this profile allowed audio input; null means not allowed. */
+  audio_consent_at: string | null;
 }
 
 export interface SkillWithProgress {
@@ -94,6 +96,7 @@ export interface TabSummary {
   title: string;
   artist: string;
   tuning: string;
+  capo: number;
   file_name: string;
   mime_type: string;
   created_at: string;
@@ -102,4 +105,48 @@ export interface TabSummary {
 export interface TabDetail extends TabSummary {
   /** The tab text for text files; null for files that open in another app. */
   content: string | null;
+}
+
+/** Events streamed from the Rust audio analysis (see src-tauri/src/audio/analysis.rs). */
+export type AudioEvent =
+  | { type: "frame"; t: number; hz: number | null; clarity: number; level_db: number; clipping: boolean }
+  | { type: "onset"; t: number }
+  | { type: "note"; t: number; hz: number; legato: boolean }
+  | { type: "error"; message: string };
+
+export interface AudioInputInfo {
+  id: string;
+  name: string;
+  channels: number;
+  sample_rate: number;
+  is_default: boolean;
+  likely_instrument: boolean;
+}
+
+export interface AudioSettings {
+  device_id: string | null;
+  /** Input channel to listen to; null mixes all channels. */
+  channel: number | null;
+  gate_db: number;
+  a4_hz: number;
+}
+
+export interface StartedInput {
+  session: number;
+  device_name: string;
+  sample_rate: number;
+  channels: number;
+}
+
+export interface PlayAlongRunSummary {
+  id: string;
+  tab_id: string;
+  started_at: string;
+  ended_at: string;
+  completed: boolean;
+  notes_played: number;
+  first_try_hits: number;
+  retried_hits: number;
+  skipped: number;
+  wrong_notes: number;
 }

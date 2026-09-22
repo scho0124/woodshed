@@ -4,3 +4,5 @@ pub mod progress;
 pub mod sessions;
 pub mod skills;
 pub mod tabs;
+pub mod audio;
+pub mod playalong;

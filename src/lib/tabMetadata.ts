@@ -1,36 +1,19 @@
-import { pitchClass } from "./pianoTheory";
+import { TUNINGS, normalizeTuningName } from "./tunings";
 
 /** Largest file the library accepts; files cross the IPC bridge as a JSON byte array. */
 export const MAX_TAB_BYTES = 20 * 1024 * 1024;
 
 const TEXT_EXTENSIONS = ["txt", "tab", "crd", "chopro", "cho", "chordpro", "pro"];
 
-/** Tunings keyed by pitch classes, low string to high. */
-const KNOWN_TUNINGS: [number[], string][] = [
-  [[4, 9, 2, 7, 11, 4], "Standard"],
-  [[2, 9, 2, 7, 11, 4], "Drop D"],
-  [[3, 8, 1, 6, 10, 3], "Half step down"],
-  [[2, 7, 0, 5, 9, 2], "Whole step down"],
-  [[1, 8, 1, 6, 10, 3], "Drop C#"],
-  [[0, 7, 0, 5, 9, 2], "Drop C"],
-  [[11, 6, 11, 4, 8, 1], "Drop B"],
-  [[2, 9, 2, 7, 9, 2], "DADGAD"],
-  [[2, 7, 2, 7, 11, 2], "Open G"],
-  [[2, 9, 2, 6, 9, 2], "Open D"],
-  [[4, 11, 4, 8, 11, 4], "Open E"],
-  [[4, 9, 2, 7], "Standard (bass)"],
-  [[2, 9, 2, 7], "Drop D (bass)"],
-  [[11, 4, 9, 2, 7], "Standard (5-string bass)"],
-];
-
 /** Tuning names offered as suggestions when editing. */
-export const TUNING_SUGGESTIONS = KNOWN_TUNINGS.map(([, name]) => name);
+export const TUNING_SUGGESTIONS = TUNINGS.map((t) => t.name);
 
 export interface TabDraft {
   file: File;
   title: string;
   artist: string;
   tuning: string;
+  capo: number;
   isText: boolean;
 }
 
@@ -83,13 +66,20 @@ function tuningFromStaff(text: string): string | undefined {
   }
   if (block.length < 4 || block.length > 7) return undefined;
 
-  const lowToHigh = [...block].reverse();
-  const pcs = lowToHigh.map((n) => pitchClass(n.charAt(0).toUpperCase() + n.slice(1)));
-  if (pcs.some((p) => p === null)) return undefined;
-  const known = KNOWN_TUNINGS.find(
-    ([t]) => t.length === pcs.length && t.every((p, i) => p === pcs[i]),
-  );
-  return known?.[1] ?? lowToHigh.map((n) => n.toUpperCase()).join(" ");
+  const lowToHigh = [...block].reverse().map((n) => n.charAt(0).toUpperCase() + n.slice(1));
+  return normalizeTuningName(lowToHigh.join(" "));
+}
+
+const ROMAN: Record<string, number> = {
+  i: 1, ii: 2, iii: 3, iv: 4, v: 5, vi: 6, vii: 7, viii: 8, ix: 9, x: 10, xi: 11, xii: 12,
+};
+
+/** "Capo 2", "capo on 3rd fret", "Capo III" -> the fret; "no capo" or nothing -> 0. */
+export function detectCapo(text: string): number {
+  const m = /\bcapo\s*[:=]?\s*(?:on\s*)?(?:(?:the\s*)?fret\s*)?(?:(\d{1,2})(?:st|nd|rd|th)?|([ivx]{1,4}))\b/i.exec(text);
+  if (!m) return 0;
+  const fret = m[1] ? parseInt(m[1], 10) : (ROMAN[m[2].toLowerCase()] ?? 0);
+  return fret >= 1 && fret <= 12 ? fret : 0;
 }
 
 /** Best-guess title/artist/tuning for an uploaded file, for the user to confirm. */
@@ -99,13 +89,16 @@ export async function draftFromFile(file: File): Promise<TabDraft> {
   let title = guess.title;
   let artist = guess.artist;
   let tuning = "";
+  let capo = 0;
 
   if (isText) {
     const text = (await file.text()).slice(0, 200_000);
     title = headerField(text, ["title", "song", "t"]) ?? title;
     artist = headerField(text, ["artist", "band", "subtitle", "st"]) ?? artist;
-    tuning = headerField(text, ["tuning"]) ?? tuningFromStaff(text) ?? "";
+    const header = headerField(text, ["tuning"]);
+    tuning = header ? normalizeTuningName(header) : (tuningFromStaff(text) ?? "");
+    capo = detectCapo(text);
   }
 
-  return { file, title, artist, tuning, isText };
+  return { file, title, artist, tuning, capo, isText };
 }
