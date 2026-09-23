@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useHotkeys } from "@/hooks/useHotkeys";
+import { TutorialCard } from "@/components/TutorialCard";
 
 function Stepper({
   label,
@@ -147,6 +148,7 @@ export function SessionSetup() {
               {skill.description}
             </div>
           </div>
+          {config.tutorial_query && <TutorialCard skillId={skill.id} />}
 
           {pool && (
             <div className="flex flex-col gap-2.5">

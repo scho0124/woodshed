@@ -8,6 +8,8 @@ pub struct Profile {
     pub name: String,
     pub color: String,
     pub created_at: DateTime<Utc>,
+    /// When this profile allowed audio input; None means not allowed.
+    pub audio_consent_at: Option<DateTime<Utc>>,
 }
 
 /// A skill joined with this profile's aggregate progress against it,
@@ -117,6 +119,7 @@ pub struct TabSummary {
     pub title: String,
     pub artist: String,
     pub tuning: String,
+    pub capo: i32,
     pub file_name: String,
     pub mime_type: String,
     pub created_at: DateTime<Utc>,
@@ -136,6 +139,8 @@ pub struct NewTabInput {
     pub title: String,
     pub artist: String,
     pub tuning: String,
+    #[serde(default)]
+    pub capo: i32,
     pub file_name: String,
     pub mime_type: String,
     pub data: Vec<u8>,
@@ -147,4 +152,35 @@ pub struct UpdateTabInput {
     pub title: String,
     pub artist: String,
     pub tuning: String,
+    pub capo: i32,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct NewPlayAlongRun {
+    pub profile_id: Uuid,
+    pub tab_id: Uuid,
+    pub started_at: DateTime<Utc>,
+    pub ended_at: DateTime<Utc>,
+    pub completed: bool,
+    pub notes_played: i32,
+    pub first_try_hits: i32,
+    pub retried_hits: i32,
+    pub skipped: i32,
+    pub wrong_notes: i32,
+    pub settings: serde_json::Value,
+    pub details: serde_json::Value,
+}
+
+#[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
+pub struct PlayAlongRunSummary {
+    pub id: Uuid,
+    pub tab_id: Uuid,
+    pub started_at: DateTime<Utc>,
+    pub ended_at: DateTime<Utc>,
+    pub completed: bool,
+    pub notes_played: i32,
+    pub first_try_hits: i32,
+    pub retried_hits: i32,
+    pub skipped: i32,
+    pub wrong_notes: i32,
 }

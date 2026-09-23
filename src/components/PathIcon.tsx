@@ -43,6 +43,25 @@ export function PathIcon({ path, className }: { path: GuitarPath | "tabs"; class
     );
   }
 
+  if (path === "vocals") {
+    return (
+      <svg {...common}>
+        <rect x="9" y="3" width="6" height="11" rx="3" />
+        <path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7" />
+      </svg>
+    );
+  }
+
+  if (path === "ukulele") {
+    return (
+      <svg {...common}>
+        <circle cx="8.5" cy="15.5" r="5" />
+        <circle cx="8.5" cy="15.5" r="1.5" fill="currentColor" stroke="none" />
+        <path d="M12 12l7-7M17.5 3.5l3 3" />
+      </svg>
+    );
+  }
+
   if (path === "tabs") {
     return (
       <svg {...common}>

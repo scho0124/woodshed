@@ -28,6 +28,8 @@ interface AppState {
   activeSessionId: string | null;
   sessionStartedAt: string | null;
   tabFilters: TabFilters;
+  /** Last tuning picked in the tuner. */
+  tunerTuning: string | null;
 
   setProfile: (profile: Profile | null) => void;
   setActivePath: (path: GuitarPath | null) => void;
@@ -36,6 +38,7 @@ interface AppState {
   setActiveSessionId: (id: string | null) => void;
   setSessionStartedAt: (iso: string | null) => void;
   setTabFilters: (patch: Partial<TabFilters>) => void;
+  setTunerTuning: (name: string) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -46,6 +49,7 @@ export const useAppStore = create<AppState>((set) => ({
   activeSessionId: null,
   sessionStartedAt: null,
   tabFilters: { query: "", tuning: null, sortKey: "title", sortDir: "asc" },
+  tunerTuning: null,
 
   setProfile: (profile) => set({ profile }),
   setActivePath: (activePath) => set({ activePath }),
@@ -54,4 +58,5 @@ export const useAppStore = create<AppState>((set) => ({
   setActiveSessionId: (activeSessionId) => set({ activeSessionId }),
   setSessionStartedAt: (sessionStartedAt) => set({ sessionStartedAt }),
   setTabFilters: (patch) => set((s) => ({ tabFilters: { ...s.tabFilters, ...patch } })),
+  setTunerTuning: (tunerTuning) => set({ tunerTuning }),
 }));

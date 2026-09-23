@@ -12,6 +12,7 @@ interface TabFields {
   title: string;
   artist: string;
   tuning: string;
+  capo: number;
 }
 
 const MIN_FONT = 10;
@@ -36,6 +37,19 @@ export function TabView() {
     queryFn: () => api.getTab(id!),
     enabled: !!id && !!profile,
   });
+
+  const { data: runs } = useQuery({
+    queryKey: ["playalong-runs", profile?.id, id],
+    queryFn: () => api.listPlayAlongRuns(profile!.id, id!),
+    enabled: !!id && !!profile,
+  });
+  const bestAccuracy = (runs ?? []).reduce<number | null>((best, r) => {
+    const acc = r.notes_played ? r.first_try_hits / r.notes_played : null;
+    return acc !== null && (best === null || acc > best) ? acc : best;
+  }, null);
+  const canPlayAlong = tab?.content != null;
+  const openTuner = () => tab && navigate(`/tuner?tuning=${encodeURIComponent(tab.tuning || "Standard")}`);
+  const openPlayAlong = () => canPlayAlong && navigate(`/tabs/${id}/play`);
 
   function refreshLists() {
     queryClient.invalidateQueries({ queryKey: ["tabs", profile?.id] });
@@ -64,7 +78,7 @@ export function TabView() {
   const bigger = () => setFontSize((f) => Math.min(MAX_FONT, f + 1));
   const smaller = () => setFontSize((f) => Math.max(MIN_FONT, f - 1));
   const startEditing = () =>
-    tab && setEditing({ title: tab.title, artist: tab.artist, tuning: tab.tuning });
+    tab && setEditing({ title: tab.title, artist: tab.artist, tuning: tab.tuning, capo: tab.capo });
 
   useHotkeys(
     editing
@@ -75,6 +89,8 @@ export function TabView() {
       : {
           Escape: () => navigate("/tabs"),
           e: startEditing,
+          t: openTuner,
+          p: openPlayAlong,
           "=": bigger,
           "+": bigger,
           "-": smaller,
@@ -121,6 +137,16 @@ export function TabView() {
               list="tuning-suggestions-edit"
               onChange={(e) => setEditing({ ...editing, tuning: e.target.value })}
             />
+            <Input
+              className="w-20"
+              type="number"
+              min={0}
+              max={12}
+              value={editing.capo}
+              aria-label="Capo"
+              title="Capo fret (0 for none)"
+              onChange={(e) => setEditing({ ...editing, capo: Math.min(12, Math.max(0, Number(e.target.value) || 0)) })}
+            />
             <Button variant="outline" size="sm" onClick={() => setEditing(null)}>
               Cancel
             </Button>
@@ -135,7 +161,14 @@ export function TabView() {
                 {tab?.title ?? ""}
               </div>
               <div className="truncate text-[11px] text-ink-faint">
-                {[tab?.artist, tab?.tuning].filter(Boolean).join(" · ") || tab?.file_name}
+                {[
+                  tab?.artist,
+                  tab?.tuning,
+                  tab?.capo ? `Capo ${tab.capo}` : null,
+                  bestAccuracy !== null ? `Play-along best ${Math.round(bestAccuracy * 100)}%` : null,
+                ]
+                  .filter(Boolean)
+                  .join(" · ") || tab?.file_name}
               </div>
             </div>
             {tab?.content != null && (
@@ -147,6 +180,14 @@ export function TabView() {
                   A+
                 </Button>
               </div>
+            )}
+            <Button variant="outline" size="sm" disabled={!tab} onClick={openTuner} title="Tuner (T)">
+              Tune
+            </Button>
+            {canPlayAlong && (
+              <Button size="sm" onClick={openPlayAlong} title="Play along (P)">
+                Play along
+              </Button>
             )}
             <Button variant="outline" size="sm" disabled={!tab} onClick={startEditing}>
               Edit

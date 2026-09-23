@@ -195,7 +195,9 @@ export function PracticeSession() {
           <div className="font-display text-[9rem] font-bold leading-none text-ink">
             {current.label}
           </div>
-          {current.chordShapeName && <ChordDiagram name={current.chordShapeName} />}
+          {current.chordShapeName && (
+            <ChordDiagram name={current.chordShapeName} instrument={current.chordInstrument} />
+          )}
         </div>
         {current.keys && <KeyboardDiagram keys={current.keys} roots={current.rootKeys} />}
         {current.detail && <div className="text-sm text-ink-faint">{current.detail}</div>}

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueries } from "@tanstack/react-query";
 import { api } from "@/lib/api";
@@ -8,8 +8,9 @@ import { Progress } from "@/components/ui/progress";
 import type { GuitarPath } from "@/lib/types";
 import { PATH_LABELS } from "@/lib/types";
 import { useHotkeys } from "@/hooks/useHotkeys";
+import { HelpDialog } from "@/components/HelpDialog";
 
-const PATHS: GuitarPath[] = ["rhythm", "lead", "bass", "piano"];
+const PATHS: GuitarPath[] = ["rhythm", "lead", "bass", "piano", "vocals", "ukulele"];
 
 const PATH_STYLE: Record<GuitarPath, { text: string; iconBg: string; blurb: string }> = {
   rhythm: {
@@ -32,6 +33,16 @@ const PATH_STYLE: Record<GuitarPath, { text: string; iconBg: string; blurb: stri
     iconBg: "bg-piano-tint",
     blurb: "Triads, inversions and scales on the keys, plus note finding for reading.",
   },
+  vocals: {
+    text: "text-vocals",
+    iconBg: "bg-vocals-tint",
+    blurb: "Fry, false cord, lows and highs for metal, death, black and thrash. Built on breath support, never on pain.",
+  },
+  ukulele: {
+    text: "text-ukulele",
+    iconBg: "bg-ukulele-tint",
+    blurb: "Chords, strumming and fingerpicking in GCEA tuning, from your first C chord to island strums.",
+  },
 };
 
 function timeAgo(iso: string | null): string {
@@ -47,6 +58,7 @@ export function Home() {
   const navigate = useNavigate();
   const profile = useAppStore((s) => s.profile);
   const setActivePath = useAppStore((s) => s.setActivePath);
+  const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
     if (!profile) navigate("/profiles", { replace: true });
@@ -78,7 +90,14 @@ export function Home() {
     enabled: !!profile,
   });
 
-  useHotkeys({ Escape: () => navigate("/profiles") });
+  useHotkeys(
+    {
+      Escape: () => navigate("/profiles"),
+      t: () => navigate("/tuner"),
+      "?": () => setShowHelp(true),
+    },
+    !showHelp,
+  );
 
   if (!profile) return null;
 
@@ -97,6 +116,21 @@ export function Home() {
           <span className="font-display text-[17px] font-semibold text-ink">Woodshed</span>
         </div>
         <div className="flex items-center gap-5">
+          <button
+            onClick={() => navigate("/tuner")}
+            className="rounded-[10px] border border-border-strong px-3.5 py-1.5 text-[13px] font-semibold text-ink hover:bg-surface-hover"
+            title="Tuner (T)"
+          >
+            Tuner
+          </button>
+          <button
+            onClick={() => setShowHelp(true)}
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-border-strong font-display text-sm font-semibold text-ink-muted hover:bg-surface-hover hover:text-ink"
+            title="Help (?)"
+            aria-label="Help"
+          >
+            ?
+          </button>
           <div className="text-sm text-ink-muted">
             {stats ? `${stats.current_streak_days}-day streak` : "·"}
           </div>
@@ -227,6 +261,8 @@ export function Home() {
           )}
         </div>
       </div>
+
+      {showHelp && <HelpDialog onClose={() => setShowHelp(false)} />}
     </div>
   );
 }

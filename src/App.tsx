@@ -10,6 +10,8 @@ import { SessionComplete } from "@/routes/SessionComplete";
 import { Progress } from "@/routes/Progress";
 import { TabLibrary } from "@/routes/TabLibrary";
 import { TabView } from "@/routes/TabView";
+import { Tuner } from "@/routes/Tuner";
+import { PlayAlong } from "@/routes/PlayAlong";
 
 export default function App() {
   return (
@@ -26,6 +28,8 @@ export default function App() {
         <Route path="/progress" element={<Progress />} />
         <Route path="/tabs" element={<TabLibrary />} />
         <Route path="/tabs/:id" element={<TabView />} />
+        <Route path="/tabs/:id/play" element={<PlayAlong />} />
+        <Route path="/tuner" element={<Tuner />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </HashRouter>
