@@ -13,6 +13,13 @@ export interface Prompt {
   keys?: number[];
   /** Keys in `keys` to mark as the root. */
   rootKeys?: number[];
+  /**
+   * A tab to play, one line per string, highest string first (`e|--5-8-|`).
+   * The practice screen shows it with the fretboard shape of its notes.
+   */
+  tab?: string[];
+  /** Pitch class (0 = C) to mark as the root on that shape. */
+  tabRoot?: number;
 }
 
 export interface GeneratorInput {

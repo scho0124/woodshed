@@ -96,7 +96,8 @@ const FEATURES: { name: string; detail: string }[] = [
   },
   {
     name: "Practice sessions",
-    detail: "A prompt per rep. Mark each one hit or missed, with a rest timer between sets.",
+    detail:
+      "A prompt per rep. Mark each one hit or missed, with a rest timer between sets. Lead and bass prompts show the tab to play and its fretboard shape, with the root in orange.",
   },
   {
     name: "Progress",

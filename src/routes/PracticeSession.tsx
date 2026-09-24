@@ -7,8 +7,11 @@ import { GENERATORS } from "@/generators";
 import type { Prompt } from "@/generators";
 import { ChordDiagram } from "@/components/ChordDiagram";
 import { KeyboardDiagram } from "@/components/KeyboardDiagram";
+import { FretboardShape } from "@/components/FretboardShape";
+import { TabSnippet } from "@/components/TabSnippet";
 import { Button } from "@/components/ui/button";
 import { useHotkeys } from "@/hooks/useHotkeys";
+import { cn } from "@/lib/utils";
 
 export function PracticeSession() {
   const navigate = useNavigate();
@@ -190,15 +193,27 @@ export function PracticeSession() {
         {sessionConfig.repsPerSet}
       </div>
 
-      <div className="flex flex-1 flex-col items-center justify-center gap-8">
-        <div className="flex items-center gap-16">
-          <div className="font-display text-[9rem] font-bold leading-none text-ink">
+      <div
+        className={cn(
+          "flex flex-1 flex-col items-center justify-center",
+          current.tab ? "gap-4" : "gap-8",
+        )}
+      >
+        <div className={cn("flex items-center", current.tab ? "gap-10" : "gap-16")}>
+          <div
+            className={cn(
+              "font-display font-bold leading-none text-ink",
+              current.tab ? "text-6xl" : "text-[9rem]",
+            )}
+          >
             {current.label}
           </div>
           {current.chordShapeName && (
             <ChordDiagram name={current.chordShapeName} instrument={current.chordInstrument} />
           )}
+          {current.tab && <FretboardShape tab={current.tab} root={current.tabRoot} />}
         </div>
+        {current.tab && <TabSnippet lines={current.tab} />}
         {current.keys && <KeyboardDiagram keys={current.keys} roots={current.rootKeys} />}
         {current.detail && <div className="text-sm text-ink-faint">{current.detail}</div>}
         <div className="text-sm text-ink-faint">
