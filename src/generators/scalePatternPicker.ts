@@ -1,37 +1,61 @@
 import type { Generator } from "./types";
+import { pickFromPool } from "./pickFromPool";
+import { scalePosition, writeTab, type FretNote, type TabStep } from "@/lib/fretboard";
+import { pitchClass } from "@/lib/pianoTheory";
 
-const STRING_NAMES = ["Low E", "A", "D", "G", "B", "High e"];
+const SCALES: Record<string, { name: string; steps: number[] }> = {
+  minor_pentatonic: { name: "minor pentatonic", steps: [0, 3, 5, 7, 10] },
+};
+
+/** Orders to play a position's notes in, lowest note = 0. */
+export const SEQUENCES: Record<string, { text: string; order: (count: number) => number[] }> = {
+  UP: { text: "Up the shape, eighth notes against the click", order: (n) => [...Array(n).keys()] },
+  DOWN: { text: "Down the shape from the top note", order: (n) => [...Array(n).keys()].reverse() },
+  THREES: {
+    text: "Up in groups of three: 1 2 3, 2 3 4, 3 4 5...",
+    order: (n) => [...Array(n - 2).keys()].flatMap((i) => [i, i + 1, i + 2]),
+  },
+  SKIPS: {
+    text: "Up in skips: 1 3, 2 4, 3 5...",
+    order: (n) => [...Array(n - 2).keys()].flatMap((i) => [i, i + 2]),
+  },
+};
 
 /**
- * A minor pentatonic, box 1 (5th-fret position) — a verified, standard box
- * shape. Positions 2-5 are approximated by sliding this same shape up the
- * neck in 3-fret steps rather than using each position's authentic CAGED
- * shape. Swap in real per-position note tables here once that precision
- * matters more than having all five positions playable today.
+ * Tab and shape for a scale position played in a sequence from the pool, or,
+ * with `config.scale: "chromatic_run"`, a four-fret chromatic exercise in the
+ * finger order from the pool (like "1-3-2-4") on every string.
  */
-const BOX_1 = [
-  { string: 6, fret: 5 },
-  { string: 6, fret: 8 },
-  { string: 5, fret: 5 },
-  { string: 5, fret: 7 },
-  { string: 4, fret: 5 },
-  { string: 4, fret: 7 },
-  { string: 3, fret: 5 },
-  { string: 3, fret: 7 },
-  { string: 2, fret: 5 },
-  { string: 2, fret: 8 },
-  { string: 1, fret: 5 },
-  { string: 1, fret: 8 },
-];
+export const scalePatternPicker: Generator = (input, previousLabel) => {
+  const label = pickFromPool(input, previousLabel) ?? "?";
+  const config = input.config;
 
-export const scalePatternPicker: Generator = (input) => {
-  const positions = (input.config.positions as number[] | undefined) ?? [1];
+  if (config.scale === "chromatic_run") {
+    const start = (config.start_fret as number | undefined) ?? 5;
+    const fingers = label.split("-").map(Number);
+    const steps: TabStep[] = [0, 1, 2, 3, 4, 5].flatMap((string) =>
+      fingers.map((f) => [{ string, text: String(start + f - 1) }]),
+    );
+    return {
+      label,
+      detail: `Fingers ${label.replace(/-/g, " ")} on every string, frets ${start} to ${start + 3}. Strict alternate picking`,
+      tab: writeTab("guitar", steps),
+    };
+  }
+
+  const scale = SCALES[config.scale as string] ?? SCALES.minor_pentatonic;
+  const key = (config.key as string | undefined) ?? "A";
+  const positions = (config.positions as number[] | undefined) ?? [1];
   const position = positions[Math.floor(Math.random() * positions.length)];
-  const shift = (position - 1) * 3;
-  const note = BOX_1[Math.floor(Math.random() * BOX_1.length)];
-
+  const sequence = SEQUENCES[label] ?? SEQUENCES.UP;
+  const notes: FretNote[] = scalePosition("guitar", pitchClass(key)!, scale.steps, position, 2);
   return {
-    label: `Fret ${note.fret + shift}`,
-    detail: `${STRING_NAMES[note.string - 1]} string · Position ${position}`,
+    label,
+    detail: `${key} ${scale.name}, position ${position}. ${sequence.text}`,
+    tab: writeTab(
+      "guitar",
+      sequence.order(notes.length).map((i) => [{ string: notes[i].string, text: String(notes[i].fret) }]),
+    ),
+    tabRoot: pitchClass(key)!,
   };
 };

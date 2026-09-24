@@ -1,7 +1,7 @@
 import type { Generator } from "./types";
 import { randomChordPicker } from "./randomChordPicker";
 import { scalePatternPicker } from "./scalePatternPicker";
-import { grooveRootPicker } from "./grooveRootPicker";
+import { linePicker } from "./linePicker";
 import { pianoChordPicker } from "./pianoChordPicker";
 import { pianoScalePicker } from "./pianoScalePicker";
 import { pianoNoteFinder } from "./pianoNoteFinder";
@@ -16,7 +16,7 @@ import { cuePicker } from "./cuePicker";
 export const GENERATORS: Record<string, Generator> = {
   random_chord_picker: randomChordPicker,
   scale_pattern_picker: scalePatternPicker,
-  groove_root_picker: grooveRootPicker,
+  line_picker: linePicker,
   piano_chord_picker: pianoChordPicker,
   piano_scale_picker: pianoScalePicker,
   piano_note_finder: pianoNoteFinder,

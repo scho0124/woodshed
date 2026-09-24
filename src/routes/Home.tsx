@@ -10,28 +10,33 @@ import { PATH_LABELS } from "@/lib/types";
 import { useHotkeys } from "@/hooks/useHotkeys";
 import { HelpDialog } from "@/components/HelpDialog";
 
-const PATHS: GuitarPath[] = ["rhythm", "lead", "bass", "piano", "vocals", "ukulele"];
+const PATHS: GuitarPath[] = ["rhythm", "lead", "bass", "piano", "clean_vocals", "vocals", "ukulele"];
 
 const PATH_STYLE: Record<GuitarPath, { text: string; iconBg: string; blurb: string }> = {
   rhythm: {
     text: "text-rhythm",
     iconBg: "bg-rhythm-tint",
-    blurb: "Chords, strumming patterns and timing. The foundation everything else sits on.",
+    blurb: "Chords, strumming and timing, then genre drills from blues shuffles to thrash gallops.",
   },
   lead: {
     text: "text-lead",
     iconBg: "bg-lead-tint",
-    blurb: "Scales, licks and phrasing. Pentatonic runs, bends and improvisation drills.",
+    blurb: "Scales, licks and phrasing, then genre drills from blues bends to shred, country and jazz.",
   },
   bass: {
     text: "text-bass",
     iconBg: "bg-bass-tint",
-    blurb: "Root movement, walking lines and locking in with a click track.",
+    blurb: "Root movement and locking in with the click, then genre grooves from slap funk to metal.",
   },
   piano: {
     text: "text-piano",
     iconBg: "bg-piano-tint",
     blurb: "Triads, inversions and scales on the keys, plus note finding for reading.",
+  },
+  clean_vocals: {
+    text: "text-clean-vocals",
+    iconBg: "bg-clean-vocals-tint",
+    blurb: "Breath, pitch, registers and belting, then rock, pop, soul, country and metal clean styles.",
   },
   vocals: {
     text: "text-vocals",

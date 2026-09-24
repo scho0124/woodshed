@@ -1,4 +1,11 @@
-export type GuitarPath = "rhythm" | "lead" | "bass" | "piano" | "vocals" | "ukulele";
+export type GuitarPath =
+  | "rhythm"
+  | "lead"
+  | "bass"
+  | "piano"
+  | "clean_vocals"
+  | "vocals"
+  | "ukulele";
 
 export interface Profile {
   id: string;
@@ -82,6 +89,7 @@ export const PATH_LABELS: Record<GuitarPath, string> = {
   lead: "Lead Guitar",
   bass: "Bass Guitar",
   piano: "Piano",
+  clean_vocals: "Clean Vocals",
   vocals: "Extreme Vocals",
   ukulele: "Ukulele",
 };
@@ -91,6 +99,7 @@ export const PATH_ACCENT: Record<GuitarPath, { text: string; bg: string; tint: s
   lead: { text: "text-lead", bg: "bg-lead", tint: "bg-lead-tint" },
   bass: { text: "text-bass", bg: "bg-bass", tint: "bg-bass-tint" },
   piano: { text: "text-piano", bg: "bg-piano", tint: "bg-piano-tint" },
+  clean_vocals: { text: "text-clean-vocals", bg: "bg-clean-vocals", tint: "bg-clean-vocals-tint" },
   vocals: { text: "text-vocals", bg: "bg-vocals", tint: "bg-vocals-tint" },
   ukulele: { text: "text-ukulele", bg: "bg-ukulele", tint: "bg-ukulele-tint" },
 };

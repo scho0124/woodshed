@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local issue drafts
+issues.md
+
+# Local system specs & optimization log
+system-specs.md

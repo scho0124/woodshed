@@ -1,8 +1,11 @@
 import type { Generator } from "./types";
+import { pickDetail } from "./pickFromPool";
 
 /**
  * Random selection from a pool of chord names, avoiding immediate repeats.
  * `config.instrument: "ukulele"` draws ukulele shapes instead of guitar ones.
+ * `config.patterns` (or per-chord `config.cues`) adds an instruction under the
+ * chord, e.g. how the genre skills want it strummed.
  */
 export const randomChordPicker: Generator = (input, previousLabel) => {
   const pool =
@@ -20,5 +23,10 @@ export const randomChordPicker: Generator = (input, previousLabel) => {
   }
 
   const instrument = input.config.instrument === "ukulele" ? "ukulele" : "guitar";
-  return { label: choice, chordShapeName: choice, chordInstrument: instrument };
+  return {
+    label: choice,
+    detail: pickDetail(input.config, choice),
+    chordShapeName: choice,
+    chordInstrument: instrument,
+  };
 };

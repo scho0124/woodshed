@@ -42,6 +42,14 @@ export const CHORD_SHAPES: Record<string, ChordShape> = {
   Cmaj7: { frets: [-1, 3, 2, 0, 0, 0], baseFret: 1 },
   Am7: { frets: [-1, 0, 2, 0, 1, 0], baseFret: 1 },
   Dm7: { frets: [-1, -1, 0, 2, 1, 1], baseFret: 1 },
+  Gmaj7: { frets: [3, 2, 0, 0, 0, 2], baseFret: 1 },
+
+  // One movable 9th grip, root on the A string, for the funk skills.
+  C9: { frets: [-1, 3, 2, 3, 3, 3], baseFret: 2 },
+  D9: { frets: [-1, 5, 4, 5, 5, 5], baseFret: 4 },
+  E9: { frets: [-1, 7, 6, 7, 7, 7], baseFret: 6 },
+  G9: { frets: [-1, 10, 9, 10, 10, 10], baseFret: 9 },
+  A9: { frets: [-1, 12, 11, 12, 12, 12], baseFret: 11 },
 
   Dsus2: { frets: [-1, -1, 0, 2, 3, 0], baseFret: 1 },
   Dsus4: { frets: [-1, -1, 0, 2, 3, 3], baseFret: 1 },
