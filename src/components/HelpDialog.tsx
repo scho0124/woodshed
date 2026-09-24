@@ -82,12 +82,12 @@ const FEATURES: { name: string; detail: string }[] = [
   {
     name: "Practice paths",
     detail:
-      "Rhythm, Lead, Bass, Piano, Extreme Vocals and Ukulele, each a list of skills with generated drills: chords, scale patterns, grooves, triads, strumming, note finding and scream techniques. Reps add up toward mastery.",
+      "Rhythm, Lead, Bass, Piano, Clean Vocals, Extreme Vocals and Ukulele, each a list of skills with generated drills: chords, scale patterns, grooves, triads, strumming, note finding, singing and scream techniques. Rhythm, Lead and Bass also have genre sections, from blues and rock to metal, punk, funk, reggae, country and jazz. Reps add up toward mastery.",
   },
   {
     name: "Tutorials",
     detail:
-      "Extreme Vocals and Ukulele skills pick a tutorial video for you, ranked by views, like rate and a sample of viewer comments. Videos with lots of \"this hurt my throat\" comments get ranked down.",
+      "Genre, Clean Vocals, Extreme Vocals and Ukulele skills pick a tutorial video for you, ranked by views, like rate and a sample of viewer comments. Videos with lots of \"this hurt my throat\" comments get ranked down.",
   },
   {
     name: "Session setup",

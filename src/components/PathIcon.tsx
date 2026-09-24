@@ -43,6 +43,16 @@ export function PathIcon({ path, className }: { path: GuitarPath | "tabs"; class
     );
   }
 
+  if (path === "clean_vocals") {
+    return (
+      <svg {...common}>
+        <path d="M9 17V6l10-2v11" />
+        <circle cx="6.5" cy="17" r="2.5" fill="currentColor" stroke="none" />
+        <circle cx="16.5" cy="15" r="2.5" fill="currentColor" stroke="none" />
+      </svg>
+    );
+  }
+
   if (path === "vocals") {
     return (
       <svg {...common}>

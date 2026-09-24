@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { UKULELE_CHORD_SHAPES } from "./chordShapes";
-import { chordKeys } from "./pianoTheory";
+import { CHORD_SHAPES, UKULELE_CHORD_SHAPES } from "./chordShapes";
+import { chordKeys, pitchClass } from "./pianoTheory";
 import ukuleleSkillsSql from "../../src-tauri/migrations/0009_ukulele_skills.sql?raw";
 
 const GCEA = [67, 60, 64, 69];
+const EADGBE = [40, 45, 50, 55, 59, 64];
 
 const pitchClasses = (notes: number[]) => [...new Set(notes.map((n) => n % 12))].sort((a, b) => a - b);
 
@@ -26,5 +27,36 @@ describe("ukulele chord shapes", () => {
     );
     expect(pools.length).toBeGreaterThan(0);
     for (const chord of pools) expect(UKULELE_CHORD_SHAPES).toHaveProperty([chord]);
+  });
+});
+
+const migrations = import.meta.glob<string>("../../src-tauri/migrations/*.sql", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+});
+
+describe("guitar chord shapes", () => {
+  const sounded = (name: string) =>
+    CHORD_SHAPES[name].frets.flatMap((fret, i) => (fret < 0 ? [] : [EADGBE[i] + fret]));
+
+  it("Gmaj7 sounds the right notes", () => {
+    expect(pitchClasses(sounded("Gmaj7"))).toEqual(pitchClasses(chordKeys("Gmaj7")!.keys));
+  });
+
+  it.each(["C9", "D9", "E9", "G9", "A9"])("%s sounds a full dominant 9th", (name) => {
+    const root = pitchClass(name.slice(0, -1))!;
+    expect(pitchClasses(sounded(name))).toEqual(pitchClasses([0, 4, 7, 10, 14].map((i) => root + i)));
+  });
+
+  it("covers every chord the guitar skills can cue", () => {
+    const configs = Object.values(migrations).flatMap((sql) =>
+      [...sql.matchAll(/'random_chord_picker',\s*'(\{[\s\S]*?\})'::jsonb/g)].map(
+        (m) => JSON.parse(m[1].replace(/''/g, "'")) as { instrument?: string; pool: string[] },
+      ),
+    );
+    const chords = configs.filter((c) => c.instrument !== "ukulele").flatMap((c) => c.pool);
+    expect(chords.length).toBeGreaterThan(0);
+    for (const chord of chords) expect(CHORD_SHAPES).toHaveProperty([chord]);
   });
 });

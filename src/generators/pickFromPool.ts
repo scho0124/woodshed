@@ -14,3 +14,16 @@ export function pickFromPool(input: GeneratorInput, avoid?: string): string | nu
   }
   return choice;
 }
+
+/**
+ * The instruction under a cue: the item's own line from `config.cues` if it has
+ * one, otherwise a random pick from `config.patterns`.
+ */
+export function pickDetail(config: Record<string, unknown>, label: string): string | undefined {
+  const cues = config.cues as Record<string, string> | undefined;
+  const patterns = config.patterns as string[] | undefined;
+  return (
+    cues?.[label] ??
+    (patterns?.length ? patterns[Math.floor(Math.random() * patterns.length)] : undefined)
+  );
+}
