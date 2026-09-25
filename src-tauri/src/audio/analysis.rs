@@ -12,6 +12,8 @@ use std::collections::VecDeque;
 pub enum InstrumentRange {
     Guitar,
     Bass,
+    /// Singing: low bass voices up to soprano highs.
+    Voice,
 }
 
 impl InstrumentRange {
@@ -19,7 +21,7 @@ impl InstrumentRange {
     /// enough for guitar down to drop B, bass needs 85 ms for a low B.
     fn window_secs(self) -> f64 {
         match self {
-            InstrumentRange::Guitar => 2048.0 / 48_000.0,
+            InstrumentRange::Guitar | InstrumentRange::Voice => 2048.0 / 48_000.0,
             InstrumentRange::Bass => 4096.0 / 48_000.0,
         }
     }
@@ -28,6 +30,7 @@ impl InstrumentRange {
         match self {
             InstrumentRange::Guitar => (55.0, 1400.0),
             InstrumentRange::Bass => (28.0, 450.0),
+            InstrumentRange::Voice => (60.0, 1200.0),
         }
     }
 }
@@ -448,5 +451,18 @@ mod tests {
         assert!(frames.len() >= expected - 1 && frames.len() <= expected + 1);
         assert!(frames.iter().any(|e| matches!(e, AudioEvent::Frame { clipping: true, .. })));
         assert!(frames.iter().any(|e| matches!(e, AudioEvent::Frame { hz: Some(hz), .. } if cents(*hz, 220.0).abs() < 1.0)));
+    }
+
+    #[test]
+    fn voice_range_hears_low_and_high_singing() {
+        for hz in [98.0, 440.0, 880.0] {
+            let signal = synth::harmonics(hz, SR, secs(0.5), &[0.5, 0.25, 0.12]);
+            let heard: Vec<f32> = run(InstrumentRange::Voice, &signal)
+                .iter()
+                .filter_map(|e| match e { AudioEvent::Frame { hz: Some(h), .. } => Some(*h), _ => None })
+                .collect();
+            assert!(heard.len() > 10, "{hz} Hz: only {} pitched frames", heard.len());
+            assert!(heard.iter().all(|h| cents(*h, hz).abs() < 15.0), "{hz} Hz heard as {heard:?}");
+        }
     }
 }

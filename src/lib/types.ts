@@ -161,10 +161,14 @@ export interface AudioInputInfo {
   sample_rate: number;
   is_default: boolean;
   likely_instrument: boolean;
+  /** Connected over USB, going by its name or id. */
+  likely_usb: boolean;
 }
 
 export interface AudioSettings {
   device_id: string | null;
+  /** The mic for vocal mic checks; null picks one automatically. */
+  voice_device_id: string | null;
   /** Input channel to listen to; null mixes all channels. */
   channel: number | null;
   gate_db: number;

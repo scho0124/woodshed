@@ -76,7 +76,7 @@ function AudioConsent({ onDecline }: { onDecline: () => void }) {
         </div>
 
         <ul className="flex list-disc flex-col gap-2 pl-5 text-[13px] leading-relaxed text-ink-muted">
-          <li>It listens to the input you choose below, and only while the tuner or play-along is open.</li>
+          <li>It listens to the input you choose below, and only while the tuner, play-along or a vocal mic check is open.</li>
           <li>
             Sound is analyzed as it arrives to find the notes you play. It is never recorded or saved, and it never
             leaves this computer.

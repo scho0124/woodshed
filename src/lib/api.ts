@@ -103,7 +103,7 @@ export const api = {
   setAudioConsent: (profileId: string, granted: boolean) =>
     invoke<Profile>("set_audio_consent", { profileId, granted }),
 
-  startAudioInput: (profileId: string, range: "guitar" | "bass", onEvent: Channel<AudioEvent>) =>
+  startAudioInput: (profileId: string, range: "guitar" | "bass" | "voice", onEvent: Channel<AudioEvent>) =>
     invoke<StartedInput>("start_audio_input", { profileId, range, onEvent }),
 
   /** Pass the session from startAudioInput; null stops whatever is running. */

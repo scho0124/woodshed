@@ -7,6 +7,9 @@ use sqlx::PgPool;
 pub struct AudioSettings {
     /// cpal device id ("host:device"); None means pick automatically.
     pub device_id: Option<String>,
+    /// The mic for vocal mic checks, kept apart so the guitar input doesn't
+    /// change; None means pick automatically.
+    pub voice_device_id: Option<String>,
     /// Input channel to listen to; None mixes all channels together.
     pub channel: Option<u16>,
     /// Anything quieter than this is treated as silence.
@@ -17,7 +20,7 @@ pub struct AudioSettings {
 
 impl Default for AudioSettings {
     fn default() -> Self {
-        Self { device_id: None, channel: None, gate_db: -55.0, a4_hz: 440.0 }
+        Self { device_id: None, voice_device_id: None, channel: None, gate_db: -55.0, a4_hz: 440.0 }
     }
 }
 

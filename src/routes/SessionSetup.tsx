@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useHotkeys } from "@/hooks/useHotkeys";
 import { TutorialCard } from "@/components/TutorialCard";
+import { MicCheck } from "@/components/MicCheck";
 
 function Stepper({
   label,
@@ -77,6 +78,7 @@ export function SessionSetup() {
   const [tempo, setTempo] = useState<number>(config.default_bpm ?? 80);
   const [restSeconds, setRestSeconds] = useState<number>(60);
   const [autoProgress, setAutoProgress] = useState(true);
+  const [micBusy, setMicBusy] = useState(false);
 
   const minBpm = config.min_bpm ?? 40;
   const maxBpm = config.max_bpm ?? 180;
@@ -121,10 +123,13 @@ export function SessionSetup() {
 
   const canStart = !createSession.isPending && !(pool && selected.length === 0);
 
-  useHotkeys({
-    Enter: () => canStart && createSession.mutate(),
-    Escape: () => navigate("/skills"),
-  });
+  useHotkeys(
+    {
+      Enter: () => canStart && createSession.mutate(),
+      Escape: () => navigate("/skills"),
+    },
+    !micBusy,
+  );
 
   if (!profile || !skill) return null;
 
@@ -149,6 +154,9 @@ export function SessionSetup() {
             </div>
           </div>
           {config.tutorial_query && <TutorialCard skillId={skill.id} />}
+          {config.mic_check && (
+            <MicCheck check={config.mic_check} pool={selected.length ? selected : (pool ?? [])} onBusyChange={setMicBusy} />
+          )}
 
           {pool && (
             <div className="flex flex-col gap-2.5">

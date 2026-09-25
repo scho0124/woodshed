@@ -45,6 +45,17 @@ SET config = config || '{"tutorial_query": "barre chord tutorial"}'::jsonb
 WHERE id = 'rhythm.barre_chords';
 ```
 
+## Vocal mic checks
+
+Every Clean Vocals and Extreme Vocals skill has a **Mic check** under its tutorial. You do a short exercise into a mic and Woodshed scores it from the live pitch and level readings:
+
+- **Pitch:** whether a held note is on the target (in any octave) or centered on a real note, how steady it stays, and whether it drifts flat as the breath runs out.
+- **Sustain:** how long one breath or one note lasts, and how evenly.
+- **Vibrato:** speed and width.
+- **Safety, for screams, fry and belting:** loudness against your own speaking level (measured once by counting to ten), bursts that run long, too little rest between them, and a clipping input. After each of these checks it asks whether anything scratched or hurt.
+
+A mic hears the sound, not what the throat is doing, so the safety readings are signs to back off, not a diagnosis. Mic checks use their own input setting and skip guitar interfaces; a USB mic gives the steadiest readings. Scoring is in `src/lib/voiceCheck.ts` and each skill's check is its `mic_check` config (see migration `0014`). Nothing is recorded.
+
 ## Development
 
 ```

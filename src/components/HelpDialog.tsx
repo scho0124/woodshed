@@ -90,6 +90,11 @@ const FEATURES: { name: string; detail: string }[] = [
       "Genre, Clean Vocals, Extreme Vocals and Ukulele skills pick a tutorial video for you, ranked by views, like rate and a sample of viewer comments. Videos with lots of \"this hurt my throat\" comments get ranked down.",
   },
   {
+    name: "Mic checks",
+    detail:
+      "Every Clean Vocals and Extreme Vocals skill has a mic check on its setup screen. Do a short exercise into a mic and Woodshed scores your pitch, how long and how steadily you held the note, and your vibrato. For screams, fry and belting it also warns when you push past your speaking volume, let bursts run long or rest too little. It never uses the guitar input; a USB mic gives the steadiest readings.",
+  },
+  {
     name: "Session setup",
     detail:
       "Pick which chords to drill, then set sets, reps, rest and tempo. Tempo can go up automatically after two clean sessions.",

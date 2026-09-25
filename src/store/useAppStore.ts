@@ -30,6 +30,8 @@ interface AppState {
   tabFilters: TabFilters;
   /** Last tuning picked in the tuner. */
   tunerTuning: string | null;
+  /** Speaking level measured by a vocal mic check, for comparing loudness. */
+  speakingLevel: { profileId: string; deviceId: string | null; db: number } | null;
 
   setProfile: (profile: Profile | null) => void;
   setActivePath: (path: GuitarPath | null) => void;
@@ -39,6 +41,7 @@ interface AppState {
   setSessionStartedAt: (iso: string | null) => void;
   setTabFilters: (patch: Partial<TabFilters>) => void;
   setTunerTuning: (name: string) => void;
+  setSpeakingLevel: (level: AppState["speakingLevel"]) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -50,6 +53,7 @@ export const useAppStore = create<AppState>((set) => ({
   sessionStartedAt: null,
   tabFilters: { query: "", tuning: null, sortKey: "title", sortDir: "asc" },
   tunerTuning: null,
+  speakingLevel: null,
 
   setProfile: (profile) => set({ profile }),
   setActivePath: (activePath) => set({ activePath }),
@@ -59,4 +63,5 @@ export const useAppStore = create<AppState>((set) => ({
   setSessionStartedAt: (sessionStartedAt) => set({ sessionStartedAt }),
   setTabFilters: (patch) => set((s) => ({ tabFilters: { ...s.tabFilters, ...patch } })),
   setTunerTuning: (tunerTuning) => set({ tunerTuning }),
+  setSpeakingLevel: (speakingLevel) => set({ speakingLevel }),
 }));

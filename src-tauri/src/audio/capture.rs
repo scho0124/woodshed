@@ -99,7 +99,7 @@ fn run_capture(
     stop: Arc<AtomicBool>,
     ready: mpsc::SyncSender<Result<StartedInput, String>>,
 ) {
-    let (stream, mut samples, started, failure) = match open_stream(session, &settings) {
+    let (stream, mut samples, started, failure) = match open_stream(session, &settings, range) {
         Ok(opened) => opened,
         Err(message) => {
             let _ = ready.send(Err(message));
@@ -145,8 +145,14 @@ fn run_capture(
 fn open_stream(
     session: u64,
     settings: &AudioSettings,
+    range: InstrumentRange,
 ) -> Result<(cpal::Stream, rtrb::Consumer<f32>, StartedInput, Failure), String> {
-    let device = devices::find_input(settings.device_id.as_deref())?;
+    let voice = range == InstrumentRange::Voice;
+    let device = if voice {
+        devices::find_voice_input(settings.voice_device_id.as_deref())?
+    } else {
+        devices::find_input(settings.device_id.as_deref())?
+    };
     let device_name = device
         .description()
         .map(|d| d.name().to_string())
@@ -156,7 +162,8 @@ fn open_stream(
         .map_err(|e| format!("Couldn't read the input's audio format: {e}"))?;
 
     let channels = config.channels() as usize;
-    let pick = settings.channel.map(usize::from).filter(|&c| c < channels);
+    // The channel setting belongs to the guitar input; a mic is mixed down.
+    let pick = if voice { None } else { settings.channel.map(usize::from).filter(|&c| c < channels) };
     // One second of headroom in case the analysis thread falls behind.
     let (producer, consumer) = rtrb::RingBuffer::<f32>::new(config.sample_rate() as usize);
     let failure: Failure = Arc::new(Mutex::new(None));

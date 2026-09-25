@@ -21,7 +21,8 @@ export function useAudioInput({
   onEvent,
 }: {
   enabled: boolean;
-  range: Instrument;
+  /** "voice" listens to the mic chosen for vocal mic checks. */
+  range: Instrument | "voice";
   restartKey?: string;
   onEvent?: (event: AudioEvent) => void;
 }) {
