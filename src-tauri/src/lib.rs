@@ -2,6 +2,7 @@ mod audio;
 mod commands;
 mod db;
 mod models;
+mod player;
 mod tutorials;
 
 use audio::capture::AudioState;
@@ -15,7 +16,7 @@ use commands::profiles::{create_profile, delete_profile, list_profiles};
 use commands::progress::{export_sessions_json, get_progress_stats};
 use commands::sessions::{complete_session, create_session, list_recent_sessions, log_session_event};
 use commands::skills::list_skills_by_path;
-use commands::tutorials::get_skill_tutorial;
+use commands::tutorials::{get_skill_tutorial, watch_tutorial};
 use commands::tabs::{create_tab, delete_tab, get_tab, list_tabs, open_tab_file, update_tab};
 use std::sync::Arc;
 use tauri::Manager;
@@ -30,6 +31,14 @@ pub fn run() {
             app.manage(pool);
             app.manage(Arc::new(AudioState::default()));
             Ok(())
+        })
+        // A tutorial left playing shouldn't keep the app running.
+        .on_window_event(|window, event| {
+            if window.label() == "main" && matches!(event, tauri::WindowEvent::Destroyed) {
+                if let Some(player) = window.app_handle().get_webview_window(player::LABEL) {
+                    let _ = player.close();
+                }
+            }
         })
         .invoke_handler(tauri::generate_handler![
             list_profiles,
@@ -58,6 +67,7 @@ pub fn run() {
             create_playalong_run,
             list_playalong_runs,
             get_skill_tutorial,
+            watch_tutorial,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

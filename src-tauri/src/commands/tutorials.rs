@@ -2,7 +2,7 @@ use crate::tutorials::{find_tutorials, TutorialVideo};
 use chrono::{DateTime, Duration, Utc};
 use serde::Serialize;
 use sqlx::PgPool;
-use tauri::State;
+use tauri::{AppHandle, State};
 
 /// Picks older than this are fetched again the next time the skill is opened.
 const CACHE_DAYS: i64 = 14;
@@ -114,4 +114,10 @@ pub async fn get_skill_tutorial(
         fetched_at: Some(fetched_at),
         missing_api_key: false,
     })
+}
+
+/// Plays a tutorial in Woodshed's player window (in the browser off Linux).
+#[tauri::command]
+pub async fn watch_tutorial(app: AppHandle, video_id: String, title: String) -> Result<(), String> {
+    crate::player::watch(&app, &video_id, &title)
 }

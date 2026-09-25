@@ -87,7 +87,7 @@ const FEATURES: { name: string; detail: string }[] = [
   {
     name: "Tutorials",
     detail:
-      "Genre, Clean Vocals, Extreme Vocals and Ukulele skills pick a tutorial video for you, ranked by views, like rate and a sample of viewer comments. Videos with lots of \"this hurt my throat\" comments get ranked down.",
+      "Genre, Clean Vocals, Extreme Vocals and Ukulele skills pick a tutorial video for you, ranked by views, like rate and a sample of viewer comments. Videos with lots of \"this hurt my throat\" comments get ranked down. Watch plays it in its own Woodshed window.",
   },
   {
     name: "Mic checks",

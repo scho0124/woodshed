@@ -18,6 +18,12 @@ Shorts (under 2 minutes), videos over an hour and videos under 1,000 views are s
 
 Picks are cached in the `skill_tutorials` table for 14 days. The **Refresh** button searches again.
 
+### Watching in the app
+
+**Watch** plays the video in its own Woodshed window, which closes when Woodshed closes. **Open on YouTube** opens it in your browser instead. So do links inside the player, such as the title, the channel and up-next videos. Videos whose uploader blocks embedding always open in the browser.
+
+The player can't be an iframe in the main window. YouTube's embed refuses to play (Error 153) without an http(s) Referer, and release builds serve the app from `tauri://localhost`, which doesn't send one. So the player window loads a small page with the base URL `https://com.woodshed.app/`, built from the app identifier. This is how YouTube asks native apps to identify themselves. It works through WebKitGTK's `load_html`, so for now in-app playback is Linux-only; other platforms open the browser. The logic is in `src-tauri/src/player.rs`.
+
 ### Setup
 
 Video picking needs a YouTube Data API key:

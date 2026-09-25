@@ -118,6 +118,8 @@ export interface TutorialVideo {
   positive_comments: number;
   negative_comments: number;
   score: number;
+  /** False when the uploader blocks playback outside YouTube; it opens in the browser instead. */
+  embeddable: boolean;
 }
 
 export interface SkillTutorial {

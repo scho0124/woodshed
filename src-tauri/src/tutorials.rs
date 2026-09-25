@@ -42,6 +42,14 @@ pub struct TutorialVideo {
     pub positive_comments: u32,
     pub negative_comments: u32,
     pub score: f64,
+    /// False when the uploader blocks playback outside YouTube, so it can't
+    /// play in the app. Picks cached before this was recorded assume it can.
+    #[serde(default = "embeddable_by_default")]
+    pub embeddable: bool,
+}
+
+fn embeddable_by_default() -> bool {
+    true
 }
 
 // --- Scoring -------------------------------------------------------------------
@@ -244,7 +252,7 @@ pub async fn find_tutorials(query: &str, key: &str) -> Result<Vec<TutorialVideo>
     let details = get(
         &client,
         "videos",
-        &[("part", "snippet,statistics,contentDetails"), ("id", &ids.join(","))],
+        &[("part", "snippet,statistics,contentDetails,status"), ("id", &ids.join(","))],
         key,
     )
     .await?;
@@ -278,6 +286,7 @@ pub async fn find_tutorials(query: &str, key: &str) -> Result<Vec<TutorialVideo>
                 positive_comments: 0,
                 negative_comments: 0,
                 score: base_score(views, likes),
+                embeddable: v["status"]["embeddable"].as_bool().unwrap_or(true),
             })
         })
         .collect();
@@ -361,5 +370,14 @@ mod tests {
         let big = base_score(2_000_000, Some(60_000)) * sentiment_factor(&mixed);
         let safe = base_score(800_000, Some(24_000)) * sentiment_factor(&praised);
         assert!(safe > big);
+    }
+
+    #[test]
+    fn picks_cached_before_embeddable_was_recorded_still_load() {
+        let cached = r#"{"video_id":"M7lc1UVf-VE","title":"t","channel":"c","thumbnail_url":"",
+            "duration_seconds":600,"views":5000,"likes":null,"comments_sampled":0,
+            "positive_comments":0,"negative_comments":0,"score":1.0}"#;
+        let v: TutorialVideo = serde_json::from_str(cached).unwrap();
+        assert!(v.embeddable);
     }
 }

@@ -31,6 +31,10 @@ export const api = {
   getSkillTutorial: (skillId: string, refresh = false) =>
     invoke<SkillTutorial>("get_skill_tutorial", { skillId, refresh }),
 
+  /** Plays a tutorial in Woodshed's player window (in the browser off Linux). */
+  watchTutorial: (videoId: string, title: string) =>
+    invoke<void>("watch_tutorial", { videoId, title }),
+
   createSession: (input: {
     profile_id: string;
     skill_id: string;
